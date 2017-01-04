@@ -9,7 +9,7 @@
 # Queue (Partition):
 #SBATCH --partition=general
 # Number of nodes and MPI tasks per node:
-#SBATCH --nodes=8
+#SBATCH --nodes=24
 #SBATCH --ntasks-per-node=32
 #
 #SBATCH --mail-type=none
@@ -22,4 +22,4 @@
 cd /ptmp/lscyboz/HERWIG
 source bin/activate
 
-Herwig integrate --jobid=28 emubB_matchbox_NLO.run
+Herwig integrate --jobid=28 emubB_matchbox_NLO.run -x setupfile.in
