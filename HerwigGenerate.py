@@ -14,12 +14,13 @@ def createSubmit(i):
 
     for line in template:
 	if line.find("Herwig integrate")!=-1:
-	  file.write("Herwig integrate --jobid="+str(i)+" emubB_matchbox_NLO.run")	
+	  file.write("Herwig integrate --jobid="+str(i)+" emubB_matchbox_NLO.run -d 9")	
 	else:
 	  file.write(line) 
 
 
-for k in range(0,66):
-	createSubmit(k)
-	os.system("sbatch Submit_"+str(k)+".sh")
+for k in range(0,17):
+#	if k!=28:
+	  createSubmit(k)
+	  os.system("sbatch Submit_"+str(k)+".sh")
 #    os.system("./yoda2aida "+subdir+"/out.yoda "+subdir+"/out.aida")

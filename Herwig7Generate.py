@@ -5,8 +5,8 @@ import os
 from time import gmtime, strftime
 import glob
 
-nEvPerFile = 2000
-nRuns = 500
+nEvPerFile = 200
+nRuns = 50
 
 dir = "/ptmp/lscyboz/Herwig_WWbB_"+strftime("%H-%M-%S", gmtime())+"/"
 InputFolder = "/ptmp/lscyboz/HERWIG/"
@@ -33,7 +33,7 @@ def printSetupLinesInSubmitFileRivet(file, str):
 		  "#SBATCH -D ./\n",
 		  "#SBATCH -J Herwig_"+str+"\n",
 		  "#SBATCH --partition=general\n",
-		  "#SBATCH --nodes=8\n",
+		  "#SBATCH --nodes=1\n",
 		  "#SBATCH --ntasks-per-node=32\n",
 		  "#SBATCH --mail-type=none\n",
 		  "#SBATCH --mail-user=<userid>@rzg.mpg.de\n",
