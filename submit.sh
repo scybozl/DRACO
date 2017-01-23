@@ -5,7 +5,7 @@
 # Initial working directory:
 #SBATCH -D ./
 # Job Name:
-#SBATCH -J test_slurm
+#SBATCH -J Sherpa
 # Queue (Partition):
 #SBATCH --partition=general
 # Number of nodes and MPI tasks per node:
@@ -19,5 +19,6 @@
 #SBATCH --time=24:00:00
 
 # Run the program:
-cd /ptmp/lscyboz/SHERPA-2.2.0/bin
-srun ./Sherpa -f Run_ttbar.dat > prog.out
+
+cd /ptmp/lscyboz/SHERPA-MC-2.2.0/emubB
+srun ../bin/Sherpa -f Run_emubB.dat > prog.out
