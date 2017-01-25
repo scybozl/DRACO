@@ -21,7 +21,7 @@
 # Run the program:
 
 module load gcc/6.2
-export PATH=/home/iwsatlas1/scyboz/Work/HERWIG/bin:$PATH
+export PATH=/ptmp/lscyboz/HERWIG/bin:$PATH
 cd 
 
 make -j 8
