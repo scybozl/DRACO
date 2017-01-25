@@ -9,7 +9,7 @@
 # Queue (Partition):
 #SBATCH --partition=general
 # Number of nodes and MPI tasks per node:
-#SBATCH --nodes=10
+#SBATCH --nodes=8
 #SBATCH --ntasks-per-node=16
 #
 #SBATCH --mail-type=none
