@@ -9,7 +9,7 @@
 # Queue (Partition):
 #SBATCH --partition=general
 # Number of nodes and MPI tasks per node:
-#SBATCH --nodes=8
+#SBATCH --nodes=10
 #SBATCH --ntasks-per-node=16
 #
 #SBATCH --mail-type=none
@@ -19,6 +19,9 @@
 #SBATCH --time=24:00:00
 
 # Run the program:
+
+module load gcc/6.2
+export PATH=/home/iwsatlas1/scyboz/Work/HERWIG/bin:$PATH
 cd 
 
 make -j 8
