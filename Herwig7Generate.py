@@ -5,10 +5,10 @@ import os
 from time import gmtime, strftime
 import glob
 
-nEvPerFile = 200
-nRuns = 50
+nEvPerFile = 50
+nRuns = 20
 
-dir = "/ptmp/lscyboz/Herwig_WWbB_"+strftime("%H-%M-%S", gmtime())+"/"
+dir = "/ptmp/lscyboz/Herwig_WWbB_"+strftime("%d-%m-%y.%H.%M.%S", gmtime())+"/"
 InputFolder = "/ptmp/lscyboz/HERWIG/"
 WorkFolder = "/ptmp/lscyboz/"
 
@@ -37,9 +37,9 @@ def printSetupLinesInSubmitFileRivet(file, str):
 		  "#SBATCH --ntasks-per-node=32\n",
 		  "#SBATCH --mail-type=none\n",
 		  "#SBATCH --mail-user=<userid>@rzg.mpg.de\n",
-		  "#SBATCH --time=02:00:00\n",
+		  "#SBATCH --time=05:00:00\n",
 		  "source /ptmp/lscyboz/HERWIG/bin/activate\n",
-		  "source /ptmp/lscyboz/RIVET-2.5.1/rivetenv.sh\n",
+		  "source /ptmp/lscyboz/RIVET-2.5.0/rivetenv.sh\n",
 		  "export RIVET_ANALYSIS_PATH=/ptmp/lscyboz/RivetCustomAnalyses/:$RIVET_ANALYSIS_PATH\n"]
 
     file.writelines(setupLines)
@@ -57,7 +57,7 @@ def SubmitHerwigJob(nEvents, seed, InputFileNameGen):
     OutputFile       = "seed_"+specStr+".hepmc"
     OutputFolder     = dir+specStr+"/"
     OutputYoda        = OutputFolder+"seed_"+specStr+".yoda"
-    tmp              = "$TMPDIR/lscyboz/"+specStr+"/"
+    tmp              = dir+specStr+"/"
 
 #    os.system("mkdir -p "+OutputFolder)
 
@@ -100,8 +100,8 @@ def SubmitHerwigJob(nEvents, seed, InputFileNameGen):
         for codeLine in codeLines2:
             submitfile2.write(codeLine+" \n")
 
-        submitfile2.write("rm "+ submitFileNameSH + " \n")
-        submitfile2.write("rm -r "+ tmp + " \n")
+#        submitfile2.write("rm "+ submitFileNameSH + " \n")
+#        submitfile2.write("rm -r "+ tmp + " \n")
         submitfile2.close()
 
         cmd = "chmod a+x " + submitFileNameSH
@@ -117,7 +117,7 @@ def SubmitHerwigJob(nEvents, seed, InputFileNameGen):
 
 ## Options file for systematic generation: the user should set the settings required for the different runs there
 
-os.system("source /ptmp/lscyboz/RIVET-2.5.1/rivetenv.sh")
+os.system("source /ptmp/lscyboz/RIVET-2.5.0/rivetenv.sh")
 os.system("export RIVET_ANALYSIS_PATH=/ptmp/lscyboz/RivetCustomAnalyses/:$RIVET_ANALYSIS_PATH")
 
 
@@ -126,10 +126,10 @@ for i in range(nRuns):
 	spec='%03.0f' % (i,)
 	if not os.path.exists(dir+spec):
 	  os.system("mkdir -p "+dir+spec)
-	os.system("cp "+InputFolder+"emubB_matchbox_NLO.in "+dir)
+	os.system("cp "+InputFolder+"emubB_matchbox_NLO_massiveBs.in "+dir)
 	if (i+1)%100==0: print "Processing run #"+str(i)
 
-	SubmitHerwigJob(nEvPerFile, i, "emubB_matchbox_NLO.run")
+	SubmitHerwigJob(nEvPerFile, i, "emubB_matchbox_NLO_massiveBs.run")
 
 	if (i+1)%400==0:
 		while True:
@@ -150,7 +150,6 @@ for i in range(nRuns):
 
 ## Yoda-merge the files from the different runs 
 print "Yoda-merging at generated cross-section"
-os.system("yodamerge "+dir+"*/*"+norms+".yoda -o "+dir+"MC_Herwig_"+settings+"_unnorm.yoda")
+os.system("yodamerge "+dir+"*/*.yoda -o "+dir+"Herwig.yoda")
 
-os.system("cp "+dir+"MC_Herwig_"+settings+"*.yoda "+subdir)
 
