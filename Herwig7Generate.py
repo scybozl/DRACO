@@ -8,7 +8,9 @@ import glob
 nEvPerFile = 50
 nRuns = 20
 
-dir = "/ptmp/lscyboz/Herwig_WWbB_"+strftime("%d-%m-%y.%H.%M.%S", gmtime())+"/"
+timestr = strftime("%d-%m-%y.%H.%M.%S", gmtime())
+
+dir = "/ptmp/lscyboz/Herwig_WWbB_"+timestr+"/"
 InputFolder = "/ptmp/lscyboz/HERWIG/"
 WorkFolder = "/ptmp/lscyboz/"
 
