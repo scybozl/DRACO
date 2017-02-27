@@ -70,6 +70,8 @@ namespace Rivet {
        _h_pTlb = bookNLOHisto1D("pTlb", 400, 0., 800.);
        _h_pTl = bookNLOHisto1D("pTl", 400, 0., 800.); //two entries per event
        _h_pTb = bookNLOHisto1D("pTb", 400, 0., 800.); //two entries per event
+
+       cnt = 0;
     }
 
     /// Perform the per-event analysis
@@ -77,6 +79,8 @@ namespace Rivet {
 //      const double weight = event.weight();
 
         _h_xs->fill(1,event);
+	cnt++;
+	std::cout << "Event nr: " << cnt << ", ";
 
 //beginning of cuts ---------------------------------------
 	// TODO: Change for hadron level running. More than one electron.
@@ -86,6 +90,7 @@ namespace Rivet {
 	}
 	if (elec[0].momentum().pT()<28 || fabs(elec[0].momentum().eta())>2.47 || (fabs(elec[0].momentum().eta())>1.37 && fabs(elec[0].momentum().eta())<1.52)){
 //	if (elec[0].momentum().pT()<28 || fabs(elec[0].momentum().eta())>2.47 ){
+		std::cout << "e+ mom. < 28 GeV or eta requirement not fulfilled\n";
 		vetoEvent;
 	}
        ParticleVector muon = applyProjection<IdentifiedFinalState>(event, "muons").particlesByPt();
@@ -93,6 +98,7 @@ namespace Rivet {
 		vetoEvent;
 	}
 	if (muon[0].momentum().pT()<28 || fabs(muon[0].momentum().eta())>2.5){
+		std::cout << "mu- mom. < 28 GeV or eta requirement not fulfilled\n";
 		vetoEvent;
 	}
 
@@ -121,11 +127,13 @@ namespace Rivet {
 
 	foreach(const Jet& jet, goodjets){
 		if(deltaR(jet.momentum(), elec[0].momentum())<0.4 || deltaR(jet.momentum(), muon[0].momentum())<0.4){
+			std::cout << "Jet separation from leptons not fulfilled\n";
 			vetoEvent;
 		}
 	}
 
 	if (bjets.size() != 2) {
+		std::cout << "Less than 2 b-jets having passed the kinematic requirements\n";
 		vetoEvent;
 	} 
 
@@ -137,16 +145,18 @@ namespace Rivet {
 
 	if((p00.mass()+p11.mass())<(p01.mass()+p10.mass())){
 		if((p00.pT()+p11.pT())/2<120){
+			std::cout << "First p_lb requirement not fulfilled\n";
 			vetoEvent;
 		}
 	} else {
 		if((p01.pT()+p10.pT())/2<120){
+			std::cout << "Second p_lb requirement not fulfilled\n";
 			vetoEvent;
 		}
 	}
 
 //end of cuts ----------------------------------------------
-
+	std::cout << "PASSED. \n";
 //end of cuts ----------------------------------------------
 //if(bjets.size()>2){
 //cout << bjets.size() << "\n";
@@ -266,6 +276,7 @@ scale(_h_pTb, factor);
 
     // Data members like post-cuts event weight counters go here
 
+  unsigned int cnt;
 
   private:
 
