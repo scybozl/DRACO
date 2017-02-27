@@ -5,7 +5,7 @@ import os
 from time import gmtime, strftime
 import glob
 
-nEvPerFile = 50
+nEvPerFile = 2500
 nRuns = 20
 
 timestr = strftime("%d-%m-%y.%H.%M.%S", gmtime())
@@ -95,7 +95,7 @@ def SubmitHerwigJob(nEvents, seed, InputFileNameGen):
 
         codeLines2.append("Herwig run "+InputFileNameGen+" -N "+str(nEvents)+" -x "+OutputFolder+SetupFileNameGen)
 
-        analyses=" -a bB4l_comparison -a MC_DENNER -a ATLAS_sherpa"
+        analyses=" -a MC_MARKUS13TeV"
 
 	codeLines2.append("rivet"+analyses+" "+tmp+OutputFile+" -H "+OutputYoda)
 
