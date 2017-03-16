@@ -215,7 +215,7 @@ set /Herwig/Partons/QCDExtractor:SecondPDF myPDFset
 
 cd /Herwig/Cuts
 
-set ChargedLeptonCut:PtMin 20.0*GeV
+set ChargedLeptonCut:PtMin 28.0*GeV
 set ChargedLeptonKtCut:MinEta -2.5
 set ChargedLeptonKtCut:MaxEta 2.5
 
@@ -227,7 +227,6 @@ cd /Herwig/MatrixElements/Matchbox
 do Factory:StartParticleGroup gluons
 insert Factory:ParticleGroup 0 /Herwig/Particles/g
 do Factory:EndParticleGroup
-
 
 cd /Herwig/Cuts
 create Herwig::MatchboxFactoryMatcher gluonMatcher
@@ -247,6 +246,10 @@ set MatchboxDeltaRCut:DeltaRMin 0.4
 
 insert QCDCuts:TwoCuts 0 MatchboxDeltaRCut 
 
+set BottomQuarkCut:PtMin 30.0*GeV
+set BottomQuarkCut:YRange -2.5 2.5
+
+insert QCDCuts:OneCuts 0 BottomQuarkCut
 
 ##################################################
 ## Integration sampler
