@@ -1,0 +1,106 @@
+(run){
+  EVENTS 10;
+  Sherpa ANALYSIS = Rivet; 
+  ANALYSIS_OUTPUT=RSanalysis_TMASS_MYSCALEFAC/random1;
+
+  alpha:=0.03;    # 0.03; 0.5;
+  tgerr:= 0.01;	  # 0.00001;
+  steps:=100000   #150000;    # 100000; 125000; 50000; 200000; 75000;
+
+  TMASS:=172.5
+  TWIDTH:=1.353538571
+  WWIDTH:=2.115547368
+  MYSCALEFAC:=1.0
+  random1:=125
+
+  FINISH_OPTIMIZATION=On;
+  ERROR=tgerr;
+  PSI_ITMIN=steps;
+
+  ORDER_ALPHAS 1;
+  DIPOLE_ALPHA=alpha;
+  RESULT_DIRECTORY=Results.RS.TMASS.alpha.steps
+
+  SHOWER_GENERATOR=None
+  FRAGMENTATION=Off
+  BEAM_REMNANTS=Off
+  ME_QED Off;
+  MI_HANDLER=None;
+
+  EW_SCHEME=3
+  WIDTH_SCHEME=CMS
+  GF=1.16637e-5
+  MASS[5]=0
+  MASSIVE[5]=0
+  MASS[6]=TMASS
+  WIDTH[6]=TWIDTH
+  MASS[24]=80.385
+  WIDTH[24]=WWIDTH
+  MASS[23]=91.1876
+  ACTIVE[25]=0
+
+  LHOLE_OLP=GoSam;
+#   LHOLE_CONTRACTFILE=OLE_order.olc;
+#   SHERPA_LDADD = golem_TMASS_MYSCALEFAC_olp;
+
+  RANDOM_SEED random1;
+
+ ME_GENERATOR Comix;
+  RS_ME_GENERATOR Comix;
+  EVENT_GENERATION_MODE Weighted;
+#  NLO_Mode 1;
+  SCALES VAR{sqr(MYSCALEFAC*TMASS)};
+
+
+  PDF_SET=PDF4LHC15_nlo_30_pdfas
+  PDF_SET_VERSION=0
+  PDF_LIBRARY=LHAPDFSherpa
+  USE_PDF_ALPHAS=1 # different treatment of top-threshold!
+
+  BEAM_1  2212; BEAM_ENERGY_1 6500;
+  BEAM_2  2212; BEAM_ENERGY_2 6500;
+  K_PERP_MEAN_1 0.; K_PERP_SIGMA_1 0.;
+  K_PERP_MEAN_2 0.; K_PERP_SIGMA_2 0.;
+
+}(run);
+
+(processes){
+  Process 93 93 -> 5 -5 24[a] -24[b];
+      DecayOS 24[a] -> -11 12;
+      DecayOS -24[b] -> 13 -14;
+  NLO_QCD_Mode Fixed_Order;
+  NLO_QCD_Part RS;
+  ME_GENERATOR Comix;
+  RS_ME_GENERATOR Comix;
+  Order (*,4)
+  End process;
+}(processes);
+
+
+(selector){
+  FastjetFinder antikt 2 25.0 0 0.4 0.75 2.5 100 2 -1;
+
+  FastjetSelector sqrt(sqr(DPhi(p[2],p[6]))+sqr(DEta(p[2],p[6])))>0.4 antikt 2 25 0 0.4 0.75 2.5 100 1;
+  FastjetSelector sqrt(sqr(DPhi(p[2],p[7]))+sqr(DEta(p[2],p[7])))>0.4 antikt 2 25 0 0.4 0.75 2.5 100 1;
+  FastjetSelector sqrt(sqr(DPhi(p[4],p[6]))+sqr(DEta(p[4],p[6])))>0.4 antikt 2 25 0 0.4 0.75 2.5 100 1;
+  FastjetSelector sqrt(sqr(DPhi(p[4],p[7]))+sqr(DEta(p[4],p[7])))>0.4 antikt 2 25 0 0.4 0.75 2.5 100 1;
+
+  PTNLO  -11  28.0  E_CMS
+  PTNLO   13  28.0  E_CMS
+  PseudoRapidityNLO  -11  -2.47  2.47
+  PseudoRapidityNLO   13  -2.5  2.5
+
+  MinSelector{
+    FastjetSelector (PPerp(p[2]+p[6])+PPerp(p[4]+p[7]))/2>110 antikt 2 25 0 0.4 0.75 2.5 100 1;
+    FastjetSelector (PPerp(p[2]+p[7])+PPerp(p[4]+p[6]))/2>110 antikt 2 25 0 0.4 0.75 2.5 100 1;
+  }
+}(selector)
+
+
+(analysis){
+  BEGIN_RIVET {
+   USE_HEPMC_SHORT 1
+HEPMC_USE_NAMED_WEIGHTS 1
+   -a MC_MARKUS13TEV
+  } END_RIVET
+}(analysis)
