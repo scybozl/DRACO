@@ -10,7 +10,7 @@ scalefac = float(argv[3])
 mode = argv[4] # grid or event
 submit = 'slurm' # choose ['serial','slurm','condor']
 nstart = 1 # first job number
-n = 2 # number of jobs
+n = 30 # number of jobs
 mpithreads = 8
 
 if mode == "grid":
@@ -98,7 +98,7 @@ elif mode == "event":
 	process.stdin.write('export RIVET_ANALYSIS_PATH=/ptmp/lscyboz/RivetCustomAnalyses:$RIVET_ANALYSIS_PATH\n')
 	process.stdin.write('export PATH=/ptmp/lscyboz/SHERPA-MC-2.2.2/bin/:$PATH\n')
 #	process.stdin.write('srun Sherpa -f Run_wwbb.dat -e 1000000 -A 06.04.17.\n')
-        process.stdin.write(' '.join(['srun', 'Sherpa'] + sherpaopts)+'\n')
+        process.stdin.write(' '.join(['srun', 'Sherpa',' random1:=1$SLURM_JOB_ID'] + sherpaopts)+'\n')
         process.stdin.write('exit 0\n')
         process.stdin.close()
     elif submit == 'condor':
