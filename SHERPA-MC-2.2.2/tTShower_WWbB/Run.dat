@@ -1,0 +1,92 @@
+(run){
+  EVENTS 10000000;
+  Sherpa ANALYSIS = Rivet; 
+  ANALYSIS_OUTPUT=RSanalysis_TMASS_MYSCALEFAC/random1;
+
+  alpha:=0.03;    # 0.03; 0.5;
+  tgerr:=0.02;
+  steps:=100000   #150000;    # 100000; 125000; 50000; 200000; 75000;
+
+  TMASS:=165.0
+  TWIDTH:=1.144217639
+  WWIDTH:=2.123450862
+  MYSCALEFAC:=0.5
+  random1:=126
+
+  FINISH_OPTIMIZATION=On;
+  ERROR=tgerr;
+  PSI_ITMIN=steps;
+
+  LGEN:=LHOLE;
+  ORDER_ALPHAS 1;
+  DIPOLE_ALPHA=alpha;
+  RESULT_DIRECTORY=Results.RS.TMASS.alpha.steps
+
+  FRAGMENTATION=Off
+  BEAM_REMNANTS=Off
+  ME_QED Off;
+  MI_HANDLER=None;
+
+  EW_SCHEME=3
+  WIDTH_SCHEME=CMS
+  GF=1.16637e-5
+  MASS[5]=0
+  MASSIVE[5]=0
+  MASS[6]=TMASS
+  WIDTH[6]=0
+  MASS[24]=80.385
+  WIDTH[24]=0
+  MASS[23]=91.1876
+  ACTIVE[25]=0
+
+  LHOLE_OLP          GoSam;
+  LHOLE_IR_REGULARISATION DRED;
+  LHOLE_CONTRACTFILE OLE_order.olc;
+  SHERPA_LDADD       golem_olp;
+
+  RANDOM_SEED random1;
+
+  ME_GENERATOR Comix Amegic LGEN;
+  RS_ME_GENERATOR Comix;
+  EVENT_GENERATION_MODE Weighted;
+#  NLO_Mode 1;
+  SCALES VAR{sqr(MYSCALEFAC*TMASS)};
+
+  % settings for hard decays
+  HARD_DECAYS On;
+  HDH_STATUS[24,12,-11]=2;
+  HDH_STATUS[-24,-14,13]=2;
+
+  PDF_SET=PDF4LHC15_nlo_30_pdfas
+  PDF_SET_VERSION=0
+  PDF_LIBRARY=LHAPDFSherpa
+  USE_PDF_ALPHAS=1 # different treatment of top-threshold!
+
+  BEAM_1  2212; BEAM_ENERGY_1 6500;
+  BEAM_2  2212; BEAM_ENERGY_2 6500;
+  K_PERP_MEAN_1 0.; K_PERP_SIGMA_1 0.;
+  K_PERP_MEAN_2 0.; K_PERP_SIGMA_2 0.;
+
+}(run);
+
+(processes){
+  Process 93 93 -> 6 -6;
+  NLO_QCD_Mode MC@NLO;
+  ME_Generator Amegic;
+  RS_ME_Generator Comix;
+  Loop_Generator LGEN;
+  Order (*,0);
+  End process;
+
+}(processes);
+
+
+
+(analysis){
+  BEGIN_RIVET {
+   USE_HEPMC_SHORT 1
+HEPMC_USE_NAMED_WEIGHTS 1
+   -a MC_MARKUS13TEV
+   -a MC_MARKUS13TEV_changed
+  } END_RIVET
+}(analysis)
