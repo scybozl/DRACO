@@ -4,13 +4,13 @@
   ANALYSIS_OUTPUT=RSanalysis_TMASS_MYSCALEFAC/random1;
 
   alpha:=0.03;    # 0.03; 0.5;
-  tgerr:=0.02;
+  tgerr:=0.01;
   steps:=100000   #150000;    # 100000; 125000; 50000; 200000; 75000;
 
-  TMASS:=165.0
+  TMASS:=172.5
   TWIDTH:=1.144217639
   WWIDTH:=2.123450862
-  MYSCALEFAC:=0.5
+  MYSCALEFAC:=1.0
   random1:=126
 
   FINISH_OPTIMIZATION=On;
@@ -50,7 +50,7 @@
   RS_ME_GENERATOR Comix;
   EVENT_GENERATION_MODE Weighted;
 #  NLO_Mode 1;
-  SCALES VAR{sqr(MYSCALEFAC*TMASS)};
+  SCALES METS{MU_F2}{MU_R2}{MU_Q2};
 
   % settings for hard decays
   HARD_DECAYS On;
@@ -87,6 +87,5 @@
    USE_HEPMC_SHORT 1
 HEPMC_USE_NAMED_WEIGHTS 1
    -a MC_MARKUS13TEV
-   -a MC_MARKUS13TEV_changed
   } END_RIVET
 }(analysis)
